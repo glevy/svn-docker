@@ -16,13 +16,15 @@ RUN apk add --no-cache apache2 apache2-utils apache2-webdav mod_dav_svn &&\
 	mkdir /home/svn/ &&\
 	mkdir /etc/subversion &&\
 	touch /etc/subversion/passwd &&\
-    wget --no-check-certificate https://github.com/mfreiholz/iF.SVNAdmin/archive/stable-1.6.2.zip &&\
-	unzip stable-1.6.2.zip -d /opt &&\
-	rm stable-1.6.2.zip &&\
-	mv /opt/iF.SVNAdmin-stable-1.6.2 /opt/svnadmin &&\
+    wget --no-check-certificate https://github.com/AmmRage/iF.SVNAdmin/archive/1.6.3.zip &&\
+	unzip 1.6.3.zip -d /opt &&\
+	rm 1.6.3.zip &&\
+	mv /opt/iF.SVNAdmin-1.6.3 /opt/svnadmin &&\
 	ln -s /opt/svnadmin /var/www/localhost/htdocs/svnadmin &&\
-	chmod -R 777 /opt/svnadmin/data
+	chmod -R 777 /opt/svnadmin/data &&\
+	rm /etc/apache2/httpd.conf
 
+COPY httpd.conf /etc/apache2/
 # Solve a security issue (https://alpinelinux.org/posts/Docker-image-vulnerability-CVE-2019-5021.html)	
 RUN sed -i -e 's/^root::/root:!:/' /etc/shadow
 
@@ -44,4 +46,4 @@ ADD dav_svn.conf /etc/apache2/conf.d/dav_svn.conf
 ENV HOME /home
 
 # Expose ports for http and custom protocol access
-EXPOSE 80 443 3690
+EXPOSE 80 443
