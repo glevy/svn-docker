@@ -15,12 +15,10 @@ RUN apk add --no-cache apache2 apache2-utils apache2-webdav mod_dav_svn &&\
 	mkdir -p /run/apache2/ &&\
 	mkdir /home/svn/ &&\
 	mkdir /etc/subversion &&\
-	touch /etc/subversion/passwd &&\
-    wget --no-check-certificate https://github.com/AmmRage/iF.SVNAdmin/archive/1.6.3.zip &&\
-	unzip 1.6.3.zip -d /opt &&\
-	rm 1.6.3.zip &&\
-	mv /opt/iF.SVNAdmin-1.6.3 /opt/svnadmin &&\
-	ln -s /opt/svnadmin /var/www/localhost/htdocs/svnadmin &&\
+	touch /etc/subversion/passwd
+
+COPY iF.SVNAdmin/ /opt/svnadmin
+RUN ln -s /opt/svnadmin /var/www/localhost/htdocs/svnadmin &&\
 	chmod -R 777 /opt/svnadmin/data &&\
 	rm /etc/apache2/httpd.conf
 
@@ -36,7 +34,7 @@ ADD apache/ /etc/services.d/apache/
 ADD subversion/ /etc/services.d/subversion/
 
 # Add SVNAuth file
-ADD subversion-access-control /etc/subversion/subversion-access-control
+ADD subversion_config/subversion-access-control /etc/subversion/subversion-access-control
 RUN chmod a+w /etc/subversion/* && chmod a+w /home/svn
 
 # Add WebDav configuration
